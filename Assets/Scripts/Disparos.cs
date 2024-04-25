@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Disparos : MonoBehaviour
+{
+
+    public Transform player;
+
+    public float range = 10f;
+    public float bulletImpulse = 0.3f;
+
+    private bool onRange = false;
+
+    public Rigidbody projectile;
+
+    //Metodo para disparar al player cuando esta a una distancia determinada
+    void Shoot() {
+
+        if (onRange)
+        {
+            Rigidbody bullet = (Rigidbody)Instantiate(projectile, transform.position + transform.forward, transform.rotation);
+            bullet.AddForce(transform.forward * bulletImpulse, ForceMode.Impulse);
+
+            Destroy(bullet.gameObject, 2);
+        }
+
+
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        float rand = Random.Range(1.0f, 2.0f);
+        InvokeRepeating("Shoot", 2, rand);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        onRange = Vector3.Distance(transform.position, player.position) < range;
+
+        if (onRange)
+            transform.LookAt(player);
+    }
+}
